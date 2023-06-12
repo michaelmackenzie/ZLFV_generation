@@ -4,3 +4,5 @@
 *.png
 *.tmp
 *.root
+*.pyc
+*/crab_projects/
