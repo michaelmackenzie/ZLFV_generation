@@ -38,7 +38,6 @@ def list_of_files(path):
   outfiles=[]
   for line in files:
     if "root" in line:
-      print line
       outfiles.append(eos_path+line)
   return outfiles
 
@@ -47,17 +46,18 @@ def list_of_files(path):
 if __name__ == '__main__':
 
     p = argparse.ArgumentParser(description='Submit MC generation jobs')
-    p.add_argument('--zemu'  , help='Submit Z->e+mu generation'  , action='store_true', required=False)
-    p.add_argument('--zetau' , help='Submit Z->e+tau generation' , action='store_true', required=False)
-    p.add_argument('--zmutau', help='Submit Z->mu+tau generation', action='store_true', required=False)
 
-    p.add_argument('--step'     , help='Generation step: digi, hlt, digihlt, reco, mini, or nano ', required=True)
-    p.add_argument('--input'     , help='Input dataset path', required=True)
-    p.add_argument('--year'      , help='Sample year', required=True)
+    p.add_argument('--zemu'   , help='Submit Z->e+mu generation'  , action='store_true', required=False)
+    p.add_argument('--zetau'  , help='Submit Z->e+tau generation' , action='store_true', required=False)
+    p.add_argument('--zmutau' , help='Submit Z->mu+tau generation', action='store_true', required=False)
 
-    p.add_argument('--tag'       , help='Output dataset tag', default="", required=False)
-    p.add_argument('--dryrun'    , help='Setup merging without running', action='store_true', required=False)
-    p.add_argument('--verbose'   , help='Print additional information', action='store_true', required=False)
+    p.add_argument('--step'   , help='Generation step: digi, hlt, digihlt, reco, mini, or nano ', required=True)
+    p.add_argument('--input'  , help='Input dataset path', required=True)
+    p.add_argument('--year'   , help='Sample year', required=True)
+
+    p.add_argument('--tag'    , help='Output dataset tag', default="", required=False)
+    p.add_argument('--dryrun' , help='Setup merging without running', action='store_true', required=False)
+    p.add_argument('--verbose', help='Print additional information', action='store_true', required=False)
 
     args = p.parse_args()
 

@@ -64,12 +64,12 @@ cd ZLFV_generation/cfg16/
 python ../multicrab_Z_GENSIM.py --year 2016 [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose]
 ```
 
-#### DIGI:
+#### DIGIHLT:
 
 Interactive processing:
 ```
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-cd CMSSW_9_4_9/src
+cd CMSSW_8_0_28/src
 cmsenv
 source /cvmfs/cms.cern.ch/crab3/crab.sh
 voms-proxy-init --rfc --voms cms --hours 192
@@ -91,15 +91,117 @@ cd ZLFV_generation/cfg16/
 python ../multicrab_Z_Multistep.py --year 2016 --step digihlt --input <path> [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose] [--tag <dataset tag>]
 ```
 
+#### RECO:
+
+Interactive processing:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_8_0_28/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+#FILE=<path to example 2016 DIGIL1HLT file>
+FILE="/eos/cms/store/group/phys_smp/ZLFV/MC_generation/ZEMu_DIGIL1HLT_no-zgamma-dev/CRAB_UserFiles/ZLFVAnalysis_DIGIL1HLT_no-zgamma-dev/230606_183941/0000/ZEMuAnalysis_pythia8_DIGIL1HLT_2016_1.root"
+cp ${FILE} ./ZEMuAnalysis_pythia8_DIGIL1HLT_2016.root
+cmsRun LFVAnalysis_13TeV_RECO_2016_cfg.py
+```
+
+Submission through crab:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_8_0_28/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+python ../multicrab_Z_Multistep.py --year 2016 --step reco --input <path> [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose] [--tag <dataset tag>]
+```
+
+#### MINI:
+
+Interactive processing:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_9_4_9/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+#FILE=<path to example 2016 RECO file>
+FILE="/eos/cms/store/group/phys_smp/ZLFV/MC_generation/ZEMu_RECO_no-zgamma-dev/CRAB_UserFiles/ZLFVAnalysis_RECO_no-zgamma-dev/230606_200048/0000/ZEMuAnalysis_pythia8_RECO_2016_1.root"
+cp ${FILE} ./ZEMuAnalysis_pythia8_RECO_2016.root
+cmsRun LFVAnalysis_13TeV_MINIAOD_2016_cfg.py
+```
+
+Submission through crab:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_9_4_9/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+python ../multicrab_Z_Multistep.py --year 2016 --step mini --input <path> [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose] [--tag <dataset tag>]
+```
+
+#### MINI:
+
+Interactive processing:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_10_2_22/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+#FILE=<path to example 2016 MINIAOD file>
+FILE="/eos/cms/store/group/phys_smp/ZLFV/MC_generation/ZEMu_MINI_no-zgamma-dev/CRAB_UserFiles/ZLFVAnalysis_MINI_no-zgamma-dev/230612_154033/0000/ZEMuAnalysis_pythia8_MINIAOD_2016_1.root"
+cp ${FILE} ./ZEMuAnalysis_pythia8_MINIAOD_2016.root
+cmsRun LFVAnalysis_13TeV_NANOAOD_2016_cfg.py
+```
+
+Submission through crab:
+```
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd CMSSW_10_2_22/src
+cmsenv
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --rfc --voms cms --hours 192
+cd ZLFV_generation/cfg16/
+python ../multicrab_Z_Multistep.py --year 2016 --step nano --input <path> [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose] [--tag <dataset tag>]
+```
+
 ### 2017 MC generation
 2017 generation uses:
 gen step: CMSSW_9_3_4
 reco-mini step: CMSSW_9_4_7
 
+#### GENSIM:
+Follow the 2016 workflow, except using CMSSW_9_3_4
+
+Submission through crab:
+```
+#setup enviroment, as described above
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd ZLFV_generation/cfg17/
+python ../multicrab_Z_GENSIM.py --year 2017 [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose]
+```
+
 ### 2018 MC generation
 2018 generation uses:
 gen-mini step: CMSSW_10_2_18
 
+#### GENSIM:
+Follow the 2016 workflow, except using CMSSW_10_2_18
+
+Submission through crab:
+```
+#setup enviroment, as described above
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd ZLFV_generation/cfg18/
+python ../multicrab_Z_GENSIM.py --year 2018 [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose]
+```
 
 
 ### Useful CRAB information
