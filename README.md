@@ -31,9 +31,12 @@ done
 ## Generating samples
 
 Samples are generated using the Pythia event generator. Generation steps include `gen`, `reco`, `digi+hlt`, `mini`, and `nano` stages.
-All nano generation from mini use: CMSSW_10_2_22
+
+All nano generation from mini use: CMSSW_10_2_22.
+
 Put the correct cfgs in the folders.
-Two scripts to run: for gen multicrab_Z_GENSIM.py; for everything else multicrab_Z_MultiStep.py
+
+Two scripts to run: for gen multicrab_Z_GENSIM.py; for everything else multicrab_Z_MultiStep.py.
 
 ### 2016 MC generation
 2016 generation uses:
@@ -145,7 +148,7 @@ cd ZLFV_generation/cfg16/
 python ../multicrab_Z_Multistep.py --year 2016 --step mini --input <path> [--zemu] [--zetau] [--zmutau] [--dryrun] [--verbose] [--tag <dataset tag>]
 ```
 
-#### MINI:
+#### NANO:
 
 Interactive processing:
 ```
@@ -175,7 +178,7 @@ python ../multicrab_Z_Multistep.py --year 2016 --step nano --input <path> [--zem
 ### 2017 MC generation
 2017 generation uses:
 gen step: CMSSW_9_3_4
-reco-mini step: CMSSW_9_4_7
+digi-mini step: CMSSW_9_4_7
 
 #### GENSIM:
 Follow the 2016 workflow, except using CMSSW_9_3_4

@@ -30,7 +30,7 @@ config.section_('Site')
 config.Site.storageSite = 'T2_CH_CERN'
 
 
-def list_of_files(path):
+def list_of_files(path, subset = -1, subset_size = 2000):
   files= subprocess.check_output(["ls", path]).splitlines()
   eos_path = path
   eos_path = eos_path.replace('/eos/cms', '')
@@ -39,6 +39,15 @@ def list_of_files(path):
   for line in files:
     if "root" in line:
       outfiles.append(eos_path+line)
+  if subset >= 0:
+    outfiles.sort()
+    nfiles = len(outfiles)
+    nstart = subset_size*subset
+    nfinish = min(nfiles, subset_size*(subset+1))
+    if nstart >= nfiles:
+      print "Subset %i with size %i not defined for input list size %i" % (subset, subset_size, nfiles)
+      exit()
+    outfiles = outfiles[nstart:nfinish]
   return outfiles
 
 
@@ -47,15 +56,22 @@ if __name__ == '__main__':
 
     p = argparse.ArgumentParser(description='Submit MC generation jobs')
 
+    # Signal selection
     p.add_argument('--zemu'   , help='Submit Z->e+mu generation'  , action='store_true', required=False)
     p.add_argument('--zetau'  , help='Submit Z->e+tau generation' , action='store_true', required=False)
     p.add_argument('--zmutau' , help='Submit Z->mu+tau generation', action='store_true', required=False)
 
+    # Job configuration
     p.add_argument('--step'   , help='Generation step: digi, hlt, digihlt, reco, mini, or nano ', required=True)
     p.add_argument('--input'  , help='Input dataset path', required=True)
     p.add_argument('--year'   , help='Sample year', required=True)
-
     p.add_argument('--tag'    , help='Output dataset tag', default="", required=False)
+
+    # Processing subsamples if requested
+    p.add_argument('--subset_size', help='N(files) to process in a separate subset', default=2000, type=int, required=False)
+    p.add_argument('--subset'     , help='Subset number to submit', default=-1, type=int, required=False)
+
+    # Debug options
     p.add_argument('--dryrun' , help='Setup merging without running', action='store_true', required=False)
     p.add_argument('--verbose', help='Print additional information', action='store_true', required=False)
 
@@ -67,6 +83,9 @@ if __name__ == '__main__':
     step       = args.step
     input_path = args.input
     year       = args.year
+
+    subset_size= args.subset_size
+    subset     = args.subset
 
     tag        = args.tag
     dryrun     = args.dryrun
@@ -112,9 +131,28 @@ if __name__ == '__main__':
       print "Unknown step in cfg",step
       exit()
 
+    if subset >= 0:
+      print "Processing subset %i with subset size %i" % (subset, subset_size)
+      tag = "_s%s" % (str(subset).zfill(2))
+
     config.Data.outputDatasetTag = 'ZLFVAnalysis_'+step_name+tag
-    if year=="2018" and (step=="reco" or step=="digihlt"): 
+
+    # Configuration depending on the stage being processed
+
+    # if year=="2018" and (step=="reco" or step=="digihlt"): 
+    if step == "digihlt": 
       config.JobType.maxMemoryMB = 4000
+
+    if step == "reco":
+      config.JobType.maxMemoryMB = 4000
+
+    if step == "mini": # Fairly fast processing
+      config.Data.unitsPerJob = 2
+    
+    if step == "nano": # Very fast processing
+      config.Data.unitsPerJob = 10
+
+
     config.General.workArea = 'crab_projects/'+step_name+year+tag
     config.JobType.psetName = cfg
 
@@ -135,39 +173,39 @@ if __name__ == '__main__':
 
 
     if zemu:
-      config.General.requestName = 'LFVAnalysis_ZEMu_'+step_name+tag
-      config.Data.userInputFiles = list_of_files(input_path)
-      config.Data.outLFNDirBase = lfn_path+'/ZEMu_'+step_name+tag
+      config.General.requestName = 'LFVAnalysis_ZEMu_'+step_name+'_'+year+tag
+      config.Data.userInputFiles = list_of_files(input_path, subset, subset_size)
+      config.Data.outLFNDirBase = lfn_path+'/ZEMu_'+step_name+'_'+year+tag
     
+      if dryrun or verbose:
+        print config
       if not dryrun:
         p = Process(target=submit, args=(config,))
         p.start()
         p.join()
-      else:
-        print config
 
     if zetau:
-      config.General.requestName = 'LFVAnalysis_ZETau_'+step_name+tag
-      config.Data.userInputFiles = list_of_files(input_path)
-      config.Data.outLFNDirBase = lfn_path+'/ZETau_'+step_name+tag
+      config.General.requestName = 'LFVAnalysis_ZETau_'+step_name+'_'+year+tag
+      config.Data.userInputFiles = list_of_files(input_path, subset, subset_size)
+      config.Data.outLFNDirBase = lfn_path+'/ZETau_'+step_name+'_'+year+tag
     
+      if dryrun or verbose:
+        print config
       if not dryrun:
         p = Process(target=submit, args=(config,))
         p.start()
         p.join()
-      else:
-        print config
 
     if zmutau:
-      config.General.requestName = 'LFVAnalysis_ZMuTau_'+step_name+tag
-      config.Data.userInputFiles = list_of_files(input_path)
-      config.Data.outLFNDirBase = lfn_path+'/ZMuTau_'+step_name+tag
+      config.General.requestName = 'LFVAnalysis_ZMuTau_'+step_name+'_'+year+tag
+      config.Data.userInputFiles = list_of_files(input_path, subset, subset_size)
+      config.Data.outLFNDirBase = lfn_path+'/ZMuTau_'+step_name+'_'+year+tag
 
+      if dryrun or verbose:
+        print config
       if not dryrun:
         p = Process(target=submit, args=(config,))
         p.start()
         p.join()
-      else:
-        print config
 
     
